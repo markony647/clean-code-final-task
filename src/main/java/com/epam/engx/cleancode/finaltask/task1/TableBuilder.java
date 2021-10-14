@@ -59,6 +59,7 @@ public class TableBuilder {
         String result = buildUpperBorder(1, cellText.length() - 2);
         result += cellText + "\n";
         result += buildLowerBorder(1, cellText.length() - 2);
+        result += "\n";
         return result;
     }
 
@@ -83,8 +84,9 @@ public class TableBuilder {
         String result = buildUpperBorder(columnCount, columnLength);
 
         List<String> columnNames = getColumnNames(dataSets);
+
         for (int column = 0; column < columnCount; column++) {
-            result += "║";
+            result = addBorder(result);
             int spaceReservedForContent = columnNames.get(column).length();
             int spaceReservedForIndents = columnLength - spaceReservedForContent;
 
@@ -96,46 +98,43 @@ public class TableBuilder {
                 result = appendSpaces(result, (spaceReservedForIndents / 2) + 1);
             }
         }
-        result += "║\n";
-        System.out.println(result);
+        result = addBorder(result);
+        result += "\n";
 
         //last string of the header
         if (dataSets.size() > 0) {
             result += "╠";
-            System.out.println(result);
             for (int j = 1; j < columnCount; j++) {
-                for (int i = 0; i < columnLength; i++) {
-                    result += "═";
-                    System.out.println(result);
-                }
-                result += "╬";
-                System.out.println(result);
+                result = addHorizontalBorderSeparator(columnLength, result);
+                result = addMiddleColumnSeparator(result);
             }
-            for (int i = 0; i < columnLength; i++) {
-                result += "═";
-                System.out.println(result);
-            }
+            result = addHorizontalBorderSeparator(columnLength, result);
             result += "╣\n";
-            System.out.println(result);
         } else {
             result += "╚";
-            System.out.println(result);
             for (int j = 1; j < columnCount; j++) {
-                for (int i = 0; i < columnLength; i++) {
-                    result += "═";
-                    System.out.println(result);
-                }
+                result = addHorizontalBorderSeparator(columnLength, result);
                 result += "╩";
-                System.out.println(result);
             }
-            for (int i = 0; i < columnLength; i++) {
-                result += "═";
-                System.out.println(result);
-            }
+            result = addHorizontalBorderSeparator(columnLength, result);
             result += "╝\n";
-            System.out.println(result);
         }
         return result;
+    }
+
+    private String addHorizontalBorderSeparator(int columnLength, String result) {
+        for (int i = 0; i < columnLength; i++) {
+            result += "═";
+        }
+        return result;
+    }
+
+    private String addMiddleColumnSeparator(String result) {
+        return result += "╬";
+    }
+
+    private String addBorder(String result) {
+        return result + "║";
     }
 
     private String appendText(String result, String text) {
@@ -151,41 +150,23 @@ public class TableBuilder {
 
     private String buildUpperBorder(int columnCount, int maxColumnSize) {
         String result = "╔";
-        System.out.println(result);
         for (int j = 1; j < columnCount; j++) {
-            for (int i = 0; i < maxColumnSize; i++) {
-                result += "═";
-                System.out.println(result);
-            }
+            result = addHorizontalBorderSeparator(maxColumnSize, result);
             result += "╦";
-            System.out.println(result);
         }
-        for (int i = 0; i < maxColumnSize; i++) {
-            result += "═";
-            System.out.println(result);
-        }
+        result = addHorizontalBorderSeparator(maxColumnSize, result);
         result += "╗\n";
-        System.out.println(result);
         return result;
     }
 
     private String buildLowerBorder(int columnCount, int maxColumnSize) {
         String result = "╚";
-        System.out.println(result);
         for (int j = 1; j < columnCount; j++) {
-            for (int i = 0; i < maxColumnSize; i++) {
-                result += "═";
-                System.out.println(result);
-            }
-            result += "╦";
-            System.out.println(result);
+            result = addHorizontalBorderSeparator(maxColumnSize, result);
+            result += "╩";
         }
-        for (int i = 0; i < maxColumnSize; i++) {
-            result += "═";
-            System.out.println(result);
-        }
-        result += "╝\n";
-        System.out.println(result);
+        result = addHorizontalBorderSeparator(maxColumnSize, result);
+        result += "╝";
         return result;
     }
 
@@ -210,7 +191,7 @@ public class TableBuilder {
         int columnCount = getColumnCount(dataSets);
         for (int row = 0; row < rowsCount; row++) {
             List<Object> values = dataSets.get(row).getValues();
-            result += "║";
+            result = addBorder(result);
             for (int column = 0; column < columnCount; column++) {
                 int valuesLength = String.valueOf(values.get(column)).length();
                 if (valuesLength % 2 == 0) {
@@ -221,7 +202,7 @@ public class TableBuilder {
                     for (int j = 0; j < (maxColumnSize - valuesLength) / 2; j++) {
                         result += " ";
                     }
-                    result += "║";
+                    result = addBorder(result);
                 } else {
                     for (int j = 0; j < (maxColumnSize - valuesLength) / 2; j++) {
                         result += " ";
@@ -230,34 +211,26 @@ public class TableBuilder {
                     for (int j = 0; j <= (maxColumnSize - valuesLength) / 2; j++) {
                         result += " ";
                     }
-                    result += "║";
+                    result = addBorder(result);
                 }
             }
             result += "\n";
             if (row < rowsCount - 1) {
                 result += "╠";
                 for (int j = 1; j < columnCount; j++) {
-                    for (int i = 0; i < maxColumnSize; i++) {
-                        result += "═";
-                    }
+                    result = addHorizontalBorderSeparator(maxColumnSize, result);
                     result += "╬";
                 }
-                for (int i = 0; i < maxColumnSize; i++) {
-                    result += "═";
-                }
+                result = addHorizontalBorderSeparator(maxColumnSize, result);
                 result += "╣\n";
             }
         }
         result += "╚";
         for (int j = 1; j < columnCount; j++) {
-            for (int i = 0; i < maxColumnSize; i++) {
-                result += "═";
-            }
+            result = addHorizontalBorderSeparator(maxColumnSize, result);
             result += "╩";
         }
-        for (int i = 0; i < maxColumnSize; i++) {
-            result += "═";
-        }
+        result = addHorizontalBorderSeparator(maxColumnSize, result);
         result += "╝\n";
         return result;
     }
