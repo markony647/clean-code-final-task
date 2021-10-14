@@ -2,7 +2,6 @@ package com.epam.engx.cleancode.finaltask.task1;
 
 import com.epam.engx.cleancode.finaltask.task1.thirdpartyjar.DataSet;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,15 +10,15 @@ public class TableBuilder {
     private static final String TABLE_EDGE = "╔";
 
     protected String getTableString(List<DataSet> data, String tableName) {
-        int maxColumnSize = getMaxColumnLength(data);
-        if (maxColumnSize == 0) {
+        int contentLength = getColumnContentLength(data);
+        if (contentLength == 0) {
             return getEmptyTable(tableName);
         } else {
             return getHeaderOfTheTable(data) + getStringTableData(data);
         }
     }
 
-    private int getMaxColumnLength(List<DataSet> dataSets) {
+    private int getColumnContentLength(List<DataSet> dataSets) {
         int maxLength;
         if (dataSets.isEmpty()) {
             return 0;
@@ -67,39 +66,38 @@ public class TableBuilder {
         return "║ Table '" + tableName + "' is empty or does not exist ║";
     }
 
+    private boolean isColumnDividesToEqualParts(int columnSize) {
+        return columnSize % 2 == 0;
+    }
+
     private String getHeaderOfTheTable(List<DataSet> dataSets) {
-        int maxColumnSize = getMaxColumnLength(dataSets);
+        int spaceForEdges = 2;
+        int columnLength = getColumnContentLength(dataSets);
         int columnCount = getColumnCount(dataSets);
-        if (maxColumnSize % 2 == 0) {
-            maxColumnSize += 2;
+        if (isColumnDividesToEqualParts(columnLength)) {
+            columnLength += spaceForEdges;
         } else {
-            maxColumnSize += 3;
+            columnLength += spaceForEdges + 1;
         }
 
-        String result = buildUpperBorder(columnCount, maxColumnSize);
+        String result = buildUpperBorder(columnCount, columnLength);
 
         List<String> columnNames = getColumnNames(dataSets);
         for (int column = 0; column < columnCount; column++) {
             result += "║";
             System.out.println(result);
-            int columnNamesLength = columnNames.get(column).length();
-            if (columnNamesLength % 2 == 0) {
-                for (int j = 0; j < (maxColumnSize - columnNamesLength) / 2; j++) {
-                    result += " ";
-                    System.out.println(result);
-                }
-                result += columnNames.get(column);
-                for (int j = 0; j < (maxColumnSize - columnNamesLength) / 2; j++) {
-                    result += " ";
-                    System.out.println(result);
-                }
+            int spaceReservedForContent = columnNames.get(column).length();
+            int spaceReservedForIndents = columnLength - spaceReservedForContent;
+            if (spaceReservedForContent % 2 == 0) {
+                result = appendSpaces(result, spaceReservedForIndents / 2);
+                result = appendText(result, columnNames.get(column));
+                result = appendSpaces(result, spaceReservedForIndents / 2);
             } else {
-                for (int j = 0; j < (maxColumnSize - columnNamesLength) / 2; j++) {
-                    result += " ";
-                    System.out.println(result);
-                }
-                result += columnNames.get(column);
-                for (int j = 0; j <= (maxColumnSize - columnNamesLength) / 2; j++) {
+                result = appendSpaces(result, spaceReservedForIndents / 2);
+                result = appendText(result, columnNames.get(column));
+
+
+                for (int j = 0; j <= (columnLength - spaceReservedForContent) / 2; j++) {
                     result += " ";
                     System.out.println(result);
                 }
@@ -113,14 +111,14 @@ public class TableBuilder {
             result += "╠";
             System.out.println(result);
             for (int j = 1; j < columnCount; j++) {
-                for (int i = 0; i < maxColumnSize; i++) {
+                for (int i = 0; i < columnLength; i++) {
                     result += "═";
                     System.out.println(result);
                 }
                 result += "╬";
                 System.out.println(result);
             }
-            for (int i = 0; i < maxColumnSize; i++) {
+            for (int i = 0; i < columnLength; i++) {
                 result += "═";
                 System.out.println(result);
             }
@@ -130,19 +128,30 @@ public class TableBuilder {
             result += "╚";
             System.out.println(result);
             for (int j = 1; j < columnCount; j++) {
-                for (int i = 0; i < maxColumnSize; i++) {
+                for (int i = 0; i < columnLength; i++) {
                     result += "═";
                     System.out.println(result);
                 }
                 result += "╩";
                 System.out.println(result);
             }
-            for (int i = 0; i < maxColumnSize; i++) {
+            for (int i = 0; i < columnLength; i++) {
                 result += "═";
                 System.out.println(result);
             }
             result += "╝\n";
             System.out.println(result);
+        }
+        return result;
+    }
+
+    private String appendText(String result, String text) {
+        return result + text;
+    }
+
+    private String appendSpaces(String result, int count) {
+        for (int j = 0; j < count; j++) {
+            result += " ";
         }
         return result;
     }
@@ -198,7 +207,7 @@ public class TableBuilder {
     private String getStringTableData(List<DataSet> dataSets) {
         int rowsCount;
         rowsCount = dataSets.size();
-        int maxColumnSize = getMaxColumnLength(dataSets);
+        int maxColumnSize = getColumnContentLength(dataSets);
         String result = "";
         if (maxColumnSize % 2 == 0) {
             maxColumnSize += 2;
