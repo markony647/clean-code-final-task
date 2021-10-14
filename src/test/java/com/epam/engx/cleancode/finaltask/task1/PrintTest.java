@@ -21,13 +21,14 @@ public class PrintTest {
     private View view;
     private DatabaseManager manager;
     private Command command;
+    private TableBuilder tableDAO;
     private final DataSet dataSet = new DataSetImpl();
 
     @Before
     public void setup() {
         manager = Mockito.mock(DatabaseManager.class);
         view = Mockito.mock(View.class);
-        command = new Print(view, manager);
+        command = new TablePrinter(view, manager);
     }
 
     @Test
