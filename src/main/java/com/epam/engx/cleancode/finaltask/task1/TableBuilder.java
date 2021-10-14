@@ -2,14 +2,16 @@ package com.epam.engx.cleancode.finaltask.task1;
 
 import com.epam.engx.cleancode.finaltask.task1.thirdpartyjar.DataSet;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TableBuilder {
 
     private static final String TABLE_EDGE = "╔";
 
     protected String getTableString(List<DataSet> data, String tableName) {
-        int maxColumnSize = getMaxColumnSize(data);
+        int maxColumnSize = getMaxColumnLength(data);
         if (maxColumnSize == 0) {
             return getEmptyTable(tableName);
         } else {
@@ -17,26 +19,32 @@ public class TableBuilder {
         }
     }
 
-    private int getMaxColumnSize(List<DataSet> dataSets) {
-        int maxLength = 0;
-        if (dataSets.size() > 0) {
-            List<String> columnNames = getColumnNames(dataSets);
-            for (String columnName : columnNames) {
-                if (columnName.length() > maxLength) {
-                    maxLength = columnName.length();
-                }
-            }
-            for (DataSet dataSet : dataSets) {
-                List<Object> values = dataSet.getValues();
-                for (Object value : values) {
-//                    if (value instanceof String)
-                    if (String.valueOf(value).length() > maxLength) {
-                        maxLength = String.valueOf(value).length();
-                    }
-                }
+    private int getMaxColumnLength(List<DataSet> dataSets) {
+        if (dataSets.isEmpty()) {
+            return 0;
+        }
+        int maxLength;
+        List<String> columnNames = getColumnNames(dataSets);
+        maxLength = findLongestElementLength(columnNames);
+
+        for (DataSet dataSet : dataSets) {
+            List<String> values = dataSet.getValues().stream().map(String::valueOf).collect(Collectors.toList());
+            int dataSetMaxLength = findLongestElementLength(values);
+            if (dataSetMaxLength > maxLength) {
+                maxLength = dataSetMaxLength;
             }
         }
-        return maxLength;
+            return maxLength;
+    }
+
+    private int findLongestElementLength(List<String> texts) {
+        String longestText = "";
+        for (String currentText : texts) {
+            if (currentText.length() > longestText.length()) {
+                longestText = currentText;
+            }
+        }
+        return longestText.length();
     }
 
     private List<String> getColumnNames(List<DataSet> dataSets) {
@@ -48,23 +56,19 @@ public class TableBuilder {
     }
 
     private String getEmptyTable(String tableName) {
-        String textEmptyTable = "║ Table '" + tableName + "' is empty or does not exist ║";
-        String result = "╔";
-        for (int i = 0; i < textEmptyTable.length() - 2; i++) {
-            result += "═";
-        }
-        result += "╗\n";
-        result += textEmptyTable + "\n";
-        result += "╚";
-        for (int i = 0; i < textEmptyTable.length() - 2; i++) {
-            result += "═";
-        }
-        result += "╝\n";
+        String cellText = getEmptyTableDefaultText(tableName);
+        String result = buildUpperBorder(1, cellText.length() - 2);
+        result += cellText + "\n";
+        result += buildLowerBorder(1, cellText.length() - 2);
         return result;
     }
 
+    private String getEmptyTableDefaultText(String tableName) {
+        return "║ Table '" + tableName + "' is empty or does not exist ║";
+    }
+
     private String getHeaderOfTheTable(List<DataSet> dataSets) {
-        int maxColumnSize = getMaxColumnSize(dataSets);
+        int maxColumnSize = getMaxColumnLength(dataSets);
         int columnCount = getColumnCount(dataSets);
         if (maxColumnSize % 2 == 0) {
             maxColumnSize += 2;
@@ -72,7 +76,7 @@ public class TableBuilder {
             maxColumnSize += 3;
         }
 
-        String result = buildColumns(columnCount, maxColumnSize);
+        String result = buildUpperBorder(columnCount, maxColumnSize);
 
         List<String> columnNames = getColumnNames(dataSets);
         for (int column = 0; column < columnCount; column++) {
@@ -143,7 +147,7 @@ public class TableBuilder {
         return result;
     }
 
-    private String buildColumns(int columnCount, int maxColumnSize) {
+    private String buildUpperBorder(int columnCount, int maxColumnSize) {
         String result = "╔";
         System.out.println(result);
         for (int j = 1; j < columnCount; j++) {
@@ -163,6 +167,26 @@ public class TableBuilder {
         return result;
     }
 
+    private String buildLowerBorder(int columnCount, int maxColumnSize) {
+        String result = "╚";
+        System.out.println(result);
+        for (int j = 1; j < columnCount; j++) {
+            for (int i = 0; i < maxColumnSize; i++) {
+                result += "═";
+                System.out.println(result);
+            }
+            result += "╦";
+            System.out.println(result);
+        }
+        for (int i = 0; i < maxColumnSize; i++) {
+            result += "═";
+            System.out.println(result);
+        }
+        result += "╝\n";
+        System.out.println(result);
+        return result;
+    }
+
     private int getColumnCount(List<DataSet> dataSets) {
         int result = 0;
         if (dataSets.size() > 0) {
@@ -174,7 +198,7 @@ public class TableBuilder {
     private String getStringTableData(List<DataSet> dataSets) {
         int rowsCount;
         rowsCount = dataSets.size();
-        int maxColumnSize = getMaxColumnSize(dataSets);
+        int maxColumnSize = getMaxColumnLength(dataSets);
         String result = "";
         if (maxColumnSize % 2 == 0) {
             maxColumnSize += 2;
