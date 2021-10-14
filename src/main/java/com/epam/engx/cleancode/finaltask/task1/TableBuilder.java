@@ -85,22 +85,15 @@ public class TableBuilder {
         List<String> columnNames = getColumnNames(dataSets);
         for (int column = 0; column < columnCount; column++) {
             result += "║";
-            System.out.println(result);
             int spaceReservedForContent = columnNames.get(column).length();
             int spaceReservedForIndents = columnLength - spaceReservedForContent;
+
+            result = appendSpaces(result, spaceReservedForIndents / 2);
+            result = appendText(result, columnNames.get(column));
             if (spaceReservedForContent % 2 == 0) {
                 result = appendSpaces(result, spaceReservedForIndents / 2);
-                result = appendText(result, columnNames.get(column));
-                result = appendSpaces(result, spaceReservedForIndents / 2);
             } else {
-                result = appendSpaces(result, spaceReservedForIndents / 2);
-                result = appendText(result, columnNames.get(column));
-
-
-                for (int j = 0; j <= (columnLength - spaceReservedForContent) / 2; j++) {
-                    result += " ";
-                    System.out.println(result);
-                }
+                result = appendSpaces(result, (spaceReservedForIndents / 2) + 1);
             }
         }
         result += "║\n";
