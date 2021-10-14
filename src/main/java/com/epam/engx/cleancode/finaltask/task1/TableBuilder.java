@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 public class TableBuilder {
 
     private static final String TABLE_EDGE = "╔";
+    private String result;
 
     protected String getTableString(List<DataSet> data, String tableName) {
         int contentLength = getColumnContentLength(data);
@@ -56,7 +57,7 @@ public class TableBuilder {
 
     private String getEmptyTable(String tableName) {
         String cellText = getEmptyTableDefaultText(tableName);
-        String result = buildUpperBorder(1, cellText.length() - 2);
+        result = buildUpperBorder(1, cellText.length() - 2);
         result += cellText + "\n";
         result += buildLowerBorder(1, cellText.length() - 2);
         result += "\n";
@@ -89,13 +90,14 @@ public class TableBuilder {
             result = addBorder(result);
             int spaceReservedForContent = columnNames.get(column).length();
             int spaceReservedForIndents = columnLength - spaceReservedForContent;
+            int spaceReservedForForOneSideIndents = spaceReservedForIndents / 2;
 
-            result = appendSpaces(result, spaceReservedForIndents / 2);
+            result = appendSpaces(result, spaceReservedForForOneSideIndents);
             result = appendText(result, columnNames.get(column));
             if (spaceReservedForContent % 2 == 0) {
-                result = appendSpaces(result, spaceReservedForIndents / 2);
+                result = appendSpaces(result, spaceReservedForForOneSideIndents);
             } else {
-                result = appendSpaces(result, (spaceReservedForIndents / 2) + 1);
+                result = appendSpaces(result, spaceReservedForForOneSideIndents + 1);
             }
         }
         result = addBorder(result);
@@ -103,13 +105,14 @@ public class TableBuilder {
 
         //last string of the header
         if (dataSets.size() > 0) {
-            result += "╠";
+            result = addLeftEdge(result);
             for (int j = 1; j < columnCount; j++) {
                 result = addHorizontalBorderSeparator(columnLength, result);
                 result = addMiddleColumnSeparator(result);
             }
             result = addHorizontalBorderSeparator(columnLength, result);
-            result += "╣\n";
+            result = addRightEdge(result);
+            result += "\n";
         } else {
             result += "╚";
             for (int j = 1; j < columnCount; j++) {
@@ -120,6 +123,14 @@ public class TableBuilder {
             result += "╝\n";
         }
         return result;
+    }
+
+    private String addRightEdge(String result) {
+        return result + "╣";
+    }
+
+    private String addLeftEdge(String result) {
+        return result + "╠";
     }
 
     private String addHorizontalBorderSeparator(int columnLength, String result) {
@@ -216,13 +227,14 @@ public class TableBuilder {
             }
             result += "\n";
             if (row < rowsCount - 1) {
-                result += "╠";
+                result = addLeftEdge(result);
                 for (int j = 1; j < columnCount; j++) {
                     result = addHorizontalBorderSeparator(maxColumnSize, result);
                     result += "╬";
                 }
                 result = addHorizontalBorderSeparator(maxColumnSize, result);
-                result += "╣\n";
+                result = addRightEdge(result);
+                result += "\n";
             }
         }
         result += "╚";
