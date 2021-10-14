@@ -20,10 +20,10 @@ public class TableBuilder {
     }
 
     private int getMaxColumnLength(List<DataSet> dataSets) {
+        int maxLength;
         if (dataSets.isEmpty()) {
             return 0;
         }
-        int maxLength;
         List<String> columnNames = getColumnNames(dataSets);
         maxLength = findLongestElementLength(columnNames);
 
