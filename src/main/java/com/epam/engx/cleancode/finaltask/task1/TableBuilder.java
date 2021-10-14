@@ -6,7 +6,18 @@ import java.util.List;
 
 public class TableBuilder {
 
-    protected int getMaxColumnSize(List<DataSet> dataSets) {
+    private static final String TABLE_EDGE = "╔";
+
+    protected String getTableString(List<DataSet> data, String tableName) {
+        int maxColumnSize = getMaxColumnSize(data);
+        if (maxColumnSize == 0) {
+            return getEmptyTable(tableName);
+        } else {
+            return getHeaderOfTheTable(data) + getStringTableData(data);
+        }
+    }
+
+    private int getMaxColumnSize(List<DataSet> dataSets) {
         int maxLength = 0;
         if (dataSets.size() > 0) {
             List<String> columnNames = getColumnNames(dataSets);
@@ -36,16 +47,7 @@ public class TableBuilder {
         return dataSets.get(0);
     }
 
-    protected String getTableString(List<DataSet> data, String tableName) {
-        int maxColumnSize = getMaxColumnSize(data);
-        if (maxColumnSize == 0) {
-            return getEmptyTable(tableName);
-        } else {
-            return getHeaderOfTheTable(data) + getStringTableData(data);
-        }
-    }
-
-    protected String getEmptyTable(String tableName) {
+    private String getEmptyTable(String tableName) {
         String textEmptyTable = "║ Table '" + tableName + "' is empty or does not exist ║";
         String result = "╔";
         for (int i = 0; i < textEmptyTable.length() - 2; i++) {
@@ -61,7 +63,7 @@ public class TableBuilder {
         return result;
     }
 
-    protected String getHeaderOfTheTable(List<DataSet> dataSets) {
+    private String getHeaderOfTheTable(List<DataSet> dataSets) {
         int maxColumnSize = getMaxColumnSize(dataSets);
         int columnCount = getColumnCount(dataSets);
         if (maxColumnSize % 2 == 0) {
@@ -70,77 +72,98 @@ public class TableBuilder {
             maxColumnSize += 3;
         }
 
-        String result = printColumns(columnCount, maxColumnSize);
+        String result = buildColumns(columnCount, maxColumnSize);
 
         List<String> columnNames = getColumnNames(dataSets);
         for (int column = 0; column < columnCount; column++) {
             result += "║";
+            System.out.println(result);
             int columnNamesLength = columnNames.get(column).length();
             if (columnNamesLength % 2 == 0) {
                 for (int j = 0; j < (maxColumnSize - columnNamesLength) / 2; j++) {
                     result += " ";
+                    System.out.println(result);
                 }
                 result += columnNames.get(column);
                 for (int j = 0; j < (maxColumnSize - columnNamesLength) / 2; j++) {
                     result += " ";
+                    System.out.println(result);
                 }
             } else {
                 for (int j = 0; j < (maxColumnSize - columnNamesLength) / 2; j++) {
                     result += " ";
+                    System.out.println(result);
                 }
                 result += columnNames.get(column);
                 for (int j = 0; j <= (maxColumnSize - columnNamesLength) / 2; j++) {
                     result += " ";
+                    System.out.println(result);
                 }
             }
         }
         result += "║\n";
+        System.out.println(result);
 
         //last string of the header
         if (dataSets.size() > 0) {
             result += "╠";
+            System.out.println(result);
             for (int j = 1; j < columnCount; j++) {
                 for (int i = 0; i < maxColumnSize; i++) {
                     result += "═";
+                    System.out.println(result);
                 }
                 result += "╬";
+                System.out.println(result);
             }
             for (int i = 0; i < maxColumnSize; i++) {
                 result += "═";
+                System.out.println(result);
             }
             result += "╣\n";
+            System.out.println(result);
         } else {
             result += "╚";
+            System.out.println(result);
             for (int j = 1; j < columnCount; j++) {
                 for (int i = 0; i < maxColumnSize; i++) {
                     result += "═";
+                    System.out.println(result);
                 }
                 result += "╩";
+                System.out.println(result);
             }
             for (int i = 0; i < maxColumnSize; i++) {
                 result += "═";
+                System.out.println(result);
             }
             result += "╝\n";
+            System.out.println(result);
         }
         return result;
     }
 
-    private String printColumns(int columnCount, int maxColumnSize) {
+    private String buildColumns(int columnCount, int maxColumnSize) {
         String result = "╔";
+        System.out.println(result);
         for (int j = 1; j < columnCount; j++) {
             for (int i = 0; i < maxColumnSize; i++) {
                 result += "═";
+                System.out.println(result);
             }
             result += "╦";
+            System.out.println(result);
         }
         for (int i = 0; i < maxColumnSize; i++) {
             result += "═";
+            System.out.println(result);
         }
         result += "╗\n";
+        System.out.println(result);
         return result;
     }
 
-    protected int getColumnCount(List<DataSet> dataSets) {
+    private int getColumnCount(List<DataSet> dataSets) {
         int result = 0;
         if (dataSets.size() > 0) {
             return getColumnNames(dataSets).size();
