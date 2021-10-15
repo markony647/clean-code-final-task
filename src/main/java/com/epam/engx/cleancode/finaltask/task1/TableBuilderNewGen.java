@@ -38,20 +38,21 @@ public class TableBuilderNewGen {
     }
 
     private String getEmptyTable(String tableName) {
-        String textEmptyTable = generateTextEmtyTable(tableName);
+        int oneColumn = 1;
+        String content = generateTextEmptyTable(tableName);
 
-        String result = generateTopLine(getEmptyTableLength(textEmptyTable), 1);
-        result += textEmptyTable + NEW_LINE;
-        result += generateBottomLine(getEmptyTableLength(textEmptyTable), 1);
+        String result = generateTopLine(getContentLength(content), oneColumn);
+        result += SIDE_BORDER + content + SIDE_BORDER  + NEW_LINE;
+        result += generateBottomLine(getContentLength(content), oneColumn);
         return result;
     }
 
-    private int getEmptyTableLength(String textEmptyTable) {
-        return textEmptyTable.length()-2;
+    private int getContentLength(String text) {
+        return text.length();
     }
 
-    private String generateTextEmtyTable(String tableName) {
-        return  SIDE_BORDER + " Table '" + tableName + "' is empty or does not exist " + SIDE_BORDER;
+    private String generateTextEmptyTable(String tableName) {
+        return  " Table '" + tableName + "' is empty or does not exist ";
     }
 
     private int getColumnContentLength(List<DataSet> dataSets) {
@@ -92,8 +93,8 @@ public class TableBuilderNewGen {
 
     private String getStringTableData(List<DataSet> dataSets) {
         String result = "";
-        result += generateAllValuesLines(dataSets, getColumnCount(dataSets));
-        result += generateBottomLine(calculateMaxColumnSize(dataSets), getColumnCount(dataSets));
+        result += generateAllValuesLines(dataSets, countColumns(dataSets));
+        result += generateBottomLine(calculateMaxColumnSize(dataSets), countColumns(dataSets));
         return result;
     }
 
@@ -108,21 +109,18 @@ public class TableBuilderNewGen {
         return result;
     }
 
-    /*считает сколько колонок*/
-    private int getColumnCount(List<DataSet> dataSets) {
-        int result = 0;
-        if (dataSets.size() > 0) {
-            return dataSets.get(0).getColumnNames().size();
+    private int countColumns(List<DataSet> dataSets) {
+        if (dataSets.isEmpty()) {
+            return 0;
         }
-        return result;
+        return getColumnNames(dataSets).size();
     }
 
-    /*печать шапки таблицы*/
     private String getHeaderOfTheTable(List<DataSet> dataSets) {
         String result = "";
-        result += generateTopLine(calculateMaxColumnSize(dataSets), getColumnCount(dataSets));
+        result += generateTopLine(calculateMaxColumnSize(dataSets), countColumns(dataSets));
         result += generateWholeNamesLine(dataSets);
-        result += generateLastStringOfHeader(dataSets.size(), calculateMaxColumnSize(dataSets), getColumnCount(dataSets));
+        result += generateLastStringOfHeader(dataSets.size(), calculateMaxColumnSize(dataSets), countColumns(dataSets));
         return result;
     }
 
@@ -130,34 +128,30 @@ public class TableBuilderNewGen {
         String result= "";
         List<String> columnNames = dataSets.get(0).getColumnNames();
 
-
-        for (int column = 0; column < getColumnCount(dataSets); column++) {
-            String columnName = ConversionToEvenLength(columnNames.get(column));
+        for (int column = 0; column < countColumns(dataSets); column++) {
+            String columnName = conversionToEvenLength(columnNames.get(column));
             result += generateColumnValueLine(columnName, calculateMaxColumnSize(dataSets));
         }
         result += SIDE_BORDER + "\n";
         return result;
     }
 
-
-
     private String generateWholeValuesAllLines(List<DataSet> dataSets, int row) {
-        String result = "";
         List<Object> values = dataSets.get(row).getValues();
-        return generateWholeValuesLine(values, getColumnCount(dataSets), calculateMaxColumnSize(dataSets));
+        return generateWholeValuesLine(values, countColumns(dataSets), calculateMaxColumnSize(dataSets));
     }
 
     private String generateWholeValuesLine(List<Object> values , int columnCount, int maxColumnSize) {
         String result = "";
         for (int column = 0; column < columnCount; column++) {
-            String value = ConversionToEvenLength(String.valueOf(values.get(column)));
+            String value = conversionToEvenLength(String.valueOf(values.get(column)));
             result += generateColumnValueLine(value, maxColumnSize);
         }
         result += SIDE_BORDER + "\n";
         return result;
     }
 
-    private String ConversionToEvenLength(String value) {
+    private String conversionToEvenLength(String value) {
         if (value.length() % 2 == 1) {
             value += SPLITTER;
         }
@@ -165,15 +159,14 @@ public class TableBuilderNewGen {
     }
 
     private int getColumnSizeWithOutName(int maxColumnSize, String columnName) {
-        int halfColumnSizeWithOutName = (maxColumnSize - getColumnNameLength(columnName)) ;
-        return halfColumnSizeWithOutName;
+        return  maxColumnSize - getColumnNameLength(columnName);
     }
 
     private String generateColumnValueLine(String string, int maxColumnSize) {
         String result = SIDE_BORDER;
-        result += generateSplitterLine(getColumnSizeWithOutName(maxColumnSize, string)/2);
+        result += generateSplitterLine(getColumnSizeWithOutName(maxColumnSize, string) / 2);
         result += string;
-        result += generateSplitterLine(getColumnSizeWithOutName(maxColumnSize, string)/2);
+        result += generateSplitterLine(getColumnSizeWithOutName(maxColumnSize, string) / 2);
         return result;
     }
 
@@ -195,15 +188,20 @@ public class TableBuilderNewGen {
         return result;
     }
 
-
     private int calculateMaxColumnSize(List<DataSet> dataSets) {
         int maxColumnSize = getColumnContentLength(dataSets);
-        if (maxColumnSize % 2 == 0) {
-            maxColumnSize += 2;
-        } else {
-            maxColumnSize += 3;
+        return maxColumnSize + countSpaceNeededForEdges(isEven(maxColumnSize));
+    }
+
+    private int countSpaceNeededForEdges(boolean isEven) {
+        if (isEven) {
+            return 2;
         }
-        return maxColumnSize;
+        return 3;
+    }
+
+    private boolean isEven(int number) {
+        return number % 2 == 0;
     }
 
     private String generateTopLine(int length, int columnCount) {
