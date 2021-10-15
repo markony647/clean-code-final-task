@@ -134,7 +134,7 @@ public class TableBuilder {
             String value = conversionToEvenLength(String.valueOf(values.get(column)));
             result.append(generateColumnValueLine(value, maxColumnSize));
         }
-        result.append(SIDE_BORDER.getValue() + NEW_LINE.getValue());
+        result.append(SIDE_BORDER.getValue()).append(NEW_LINE.getValue());
         return result.toString();
     }
 
@@ -181,10 +181,11 @@ public class TableBuilder {
     }
 
     private int countSpaceNeededForEdges(boolean isEven) {
+        int spaceForCornerElements = 2;
         if (isEven) {
-            return 2;
+            return spaceForCornerElements;
         }
-        return 3;
+        return spaceForCornerElements + 1;
     }
 
     private boolean isEven(int number) {
@@ -213,20 +214,20 @@ public class TableBuilder {
     }
 
     private String generateMiddleLinePart(int length, String element) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < length; i++) {
-            result += element;
+            result.append(element);
         }
-        return result;
+        return result.toString();
     }
 
     private String generateMiddleLine(int length, int columnCount, String element) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int j = 1; j < columnCount; j++) {
-            result += generateMiddleLinePart(length, LINE.getValue());
-            result += element;
+            result.append(generateMiddleLinePart(length, LINE.getValue()));
+            result.append(element);
         }
-        result += generateMiddleLinePart(length, LINE.getValue());
-        return result;
+        result.append(generateMiddleLinePart(length, LINE.getValue()));
+        return result.toString();
     }
 }
