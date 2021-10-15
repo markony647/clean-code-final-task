@@ -9,19 +9,19 @@ public class TableBuilderNewGen {
 
     private static final String TOP_LEFT_CORNER = "╔";
     private static final String TOP_MIDDLE_CORNER = "╦";
-    private static final String TOP_RIGHT_CORNER = "╗\n";
+    private static final String TOP_RIGHT_CORNER = "╗";
 
     private static final String BOTTOM_LEFT_CORNER = "╚";
     private static final String BOTTOM_MIDDLE_CORNER = "╩";
-    private static final String BOTTOM_RIGHT_CORNER = "╝\n";
+    private static final String BOTTOM_RIGHT_CORNER = "╝";
 
     private static final String MIDDLE_LEFT_CORNER = "╠";
     private static final String MIDDLE_MIDDLE_CORNER = "╬";
-    private static final String MIDDLE_RIGHT_CORNER = "╣\n";
+    private static final String MIDDLE_RIGHT_CORNER = "╣";
 
     private static final String SIDE_BORDER = "║";
     private static final String LINE = "═";
-    private static final String SPLITTER = " ";
+    private static final String INDENT = " ";
     private static final String NEW_LINE = "\n";
 
 
@@ -107,9 +107,6 @@ public class TableBuilderNewGen {
     }
 
     private int countColumns(List<DataSet> dataSets) {
-        if (dataSets.isEmpty()) {
-            return 0;
-        }
         return getColumnNames(dataSets).size();
     }
 
@@ -149,8 +146,8 @@ public class TableBuilderNewGen {
     }
 
     private String conversionToEvenLength(String value) {
-        if (value.length() % 2 == 1) {
-            value += SPLITTER;
+        if (! isEven(value.length())) {
+            value += INDENT;
         }
         return value;
     }
@@ -168,7 +165,7 @@ public class TableBuilderNewGen {
     }
 
     private String generateSplitterLine( int halfColumnSizeWithOutName) {
-        return generateMiddlePartOfLine(halfColumnSizeWithOutName, SPLITTER);
+        return generateMiddleLinePart(halfColumnSizeWithOutName, INDENT);
     }
 
     private int getColumnNameLength(String columnName) {
@@ -203,26 +200,26 @@ public class TableBuilderNewGen {
 
     private String generateTopLine(int length, int columnCount) {
         String result = TOP_LEFT_CORNER;
-        result += generateWholeMiddlePartOfLine(length, columnCount, TOP_MIDDLE_CORNER);
-        result += TOP_RIGHT_CORNER;
+        result += generateMiddleLine(length, columnCount, TOP_MIDDLE_CORNER);
+        result += TOP_RIGHT_CORNER + NEW_LINE;
         return result;
     }
 
     private String generateMiddleLine(int length, int columnCount) {
         String result = MIDDLE_LEFT_CORNER;
-        result += generateWholeMiddlePartOfLine(length, columnCount, MIDDLE_MIDDLE_CORNER);
-        result += MIDDLE_RIGHT_CORNER;
+        result += generateMiddleLine(length, columnCount, MIDDLE_MIDDLE_CORNER);
+        result += MIDDLE_RIGHT_CORNER + NEW_LINE;
         return result;
     }
 
     private String generateBottomLine(int length, int columnCount) {
         String result = BOTTOM_LEFT_CORNER;
-        result += generateWholeMiddlePartOfLine(length, columnCount, BOTTOM_MIDDLE_CORNER);
-        result += BOTTOM_RIGHT_CORNER;
+        result += generateMiddleLine(length, columnCount, BOTTOM_MIDDLE_CORNER);
+        result += BOTTOM_RIGHT_CORNER + NEW_LINE;
         return result;
     }
 
-    private String generateMiddlePartOfLine(int length, String element) {
+    private String generateMiddleLinePart(int length, String element) {
         String result = "";
         for (int i = 0; i < length; i++) {
             result += element;
@@ -230,15 +227,13 @@ public class TableBuilderNewGen {
         return result;
     }
 
-    private String generateWholeMiddlePartOfLine(int length, int columnCount, String element) {
+    private String generateMiddleLine(int length, int columnCount, String element) {
         String result = "";
         for (int j = 1; j < columnCount; j++) {
-            result += generateMiddlePartOfLine(length, LINE);
+            result += generateMiddleLinePart(length, LINE);
             result += element;
         }
-        result += generateMiddlePartOfLine(length, LINE);
+        result += generateMiddleLinePart(length, LINE);
         return result;
     }
-
-
 }
