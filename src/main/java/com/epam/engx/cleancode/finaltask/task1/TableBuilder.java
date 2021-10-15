@@ -6,18 +6,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.epam.engx.cleancode.finaltask.task1.enums.LowerSeparators.*;
+import static com.epam.engx.cleancode.finaltask.task1.enums.MiddleSeparators.*;
 import static com.epam.engx.cleancode.finaltask.task1.enums.UpperSeparators.*;
 
 
 public class TableBuilder {
-
-//    private static final String BOTTOM_LEFT_CORNER = "╚";
-//    private static final String BOTTOM_MIDDLE_CORNER = "╩";
-//    private static final String BOTTOM_RIGHT_CORNER = "╝";
-
-    private static final String MIDDLE_LEFT_CORNER = "╠";
-    private static final String MIDDLE_MIDDLE_CORNER = "╬";
-    private static final String MIDDLE_RIGHT_CORNER = "╣";
 
     private static final String SIDE_BORDER = "║";
     private static final String LINE = "═";
@@ -209,9 +202,9 @@ public class TableBuilder {
     }
 
     private String generateMiddleLine(int length, int columnCount) {
-        String result = MIDDLE_LEFT_CORNER;
-        result += generateMiddleLine(length, columnCount, MIDDLE_MIDDLE_CORNER);
-        result += MIDDLE_RIGHT_CORNER + NEW_LINE;
+        String result = MIDDLE_LEFT_CORNER.getValue();
+        result += generateMiddleLine(length, columnCount, MIDDLE_MIDDLE_CORNER.getValue());
+        result += MIDDLE_RIGHT_CORNER.getValue() + NEW_LINE;
         return result;
     }
 
