@@ -18,7 +18,7 @@ public class TablePrinter implements Command {
 
     private final View view;
     private final DatabaseManager manager;
-    private final TableBuilderNewGen tableBuilderNewGen = new TableBuilderNewGen();
+    private final TableBuilder tableBuilder = new TableBuilder();
 
     public static final String COMMAND_SPLITTER = " ";
 
@@ -36,7 +36,7 @@ public class TablePrinter implements Command {
         validateCommand(command);
         String tableName = getTableName(command);
         List<DataSet> data = manager.getTableData(tableName);
-        view.write(tableBuilderNewGen.getTableString(data, tableName));
+        view.write(tableBuilder.getTableString(data, tableName));
     }
 
     private void validateCommand(String[] command) {
