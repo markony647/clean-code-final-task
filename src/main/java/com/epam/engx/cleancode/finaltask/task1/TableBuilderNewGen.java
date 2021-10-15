@@ -162,11 +162,11 @@ public class TableBuilderNewGen {
         return  maxColumnSize - getColumnNameLength(columnName);
     }
 
-    private String generateColumnValueLine(String string, int maxColumnSize) {
+    private String generateColumnValueLine(String columnText, int maxColumnSize) {
         String result = SIDE_BORDER;
-        result += generateSplitterLine(getColumnSizeWithOutName(maxColumnSize, string) / 2);
-        result += string;
-        result += generateSplitterLine(getColumnSizeWithOutName(maxColumnSize, string) / 2);
+        result += generateSplitterLine(getColumnSizeWithOutName(maxColumnSize, columnText) / 2);
+        result += columnText;
+        result += generateSplitterLine(getColumnSizeWithOutName(maxColumnSize, columnText) / 2);
         return result;
     }
 
