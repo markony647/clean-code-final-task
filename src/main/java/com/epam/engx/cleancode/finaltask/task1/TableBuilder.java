@@ -5,18 +5,15 @@ import com.epam.engx.cleancode.finaltask.task1.thirdpartyjar.DataSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.epam.engx.cleancode.finaltask.task1.TableBuilder.UpperSeparators.*;
+import static com.epam.engx.cleancode.finaltask.task1.enums.LowerSeparators.*;
+import static com.epam.engx.cleancode.finaltask.task1.enums.UpperSeparators.*;
 
 
 public class TableBuilder {
 
-//    private static final String TOP_LEFT_CORNER = "╔";
-//    private static final String TOP_MIDDLE_CORNER = "╦";
-//    private static final String TOP_RIGHT_CORNER = "╗";
-
-    private static final String BOTTOM_LEFT_CORNER = "╚";
-    private static final String BOTTOM_MIDDLE_CORNER = "╩";
-    private static final String BOTTOM_RIGHT_CORNER = "╝";
+//    private static final String BOTTOM_LEFT_CORNER = "╚";
+//    private static final String BOTTOM_MIDDLE_CORNER = "╩";
+//    private static final String BOTTOM_RIGHT_CORNER = "╝";
 
     private static final String MIDDLE_LEFT_CORNER = "╠";
     private static final String MIDDLE_MIDDLE_CORNER = "╬";
@@ -26,23 +23,6 @@ public class TableBuilder {
     private static final String LINE = "═";
     private static final String INDENT = " ";
     private static final String NEW_LINE = "\n";
-
-    public enum UpperSeparators {
-        TOP_LEFT_CORNER("╔"),
-        TOP_MIDDLE_CORNER("╦"),
-        TOP_RIGHT_CORNER("╗");
-
-        private String value;
-
-        UpperSeparators(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-
 
     public String getTableString(List<DataSet> data, String tableName) {
         if (data.isEmpty()) {
@@ -222,9 +202,9 @@ public class TableBuilder {
     }
 
     private String generateTopLine(int length, int columnCount) {
-        String result = TOP_LEFT_CORNER.getValue();
-        result += generateMiddleLine(length, columnCount, TOP_MIDDLE_CORNER.getValue());
-        result += TOP_RIGHT_CORNER.getValue() + NEW_LINE;
+        String result = UPPER_LEFT_CORNER.getValue();
+        result += generateMiddleLine(length, columnCount, UPPER_MIDDLE_CORNER.getValue());
+        result += UPPER_RIGHT_CORNER.getValue() + NEW_LINE;
         return result;
     }
 
@@ -236,9 +216,9 @@ public class TableBuilder {
     }
 
     private String generateBottomLine(int length, int columnCount) {
-        String result = BOTTOM_LEFT_CORNER;
-        result += generateMiddleLine(length, columnCount, BOTTOM_MIDDLE_CORNER);
-        result += BOTTOM_RIGHT_CORNER + NEW_LINE;
+        String result = BOTTOM_LEFT_CORNER.getValue();
+        result += generateMiddleLine(length, columnCount, BOTTOM_MIDDLE_CORNER.getValue());
+        result += BOTTOM_RIGHT_CORNER.getValue() + NEW_LINE;
         return result;
     }
 
