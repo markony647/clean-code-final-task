@@ -11,7 +11,6 @@ import java.util.List;
 
 public class TablePrinter implements Command {
 
-
     public static final int NUMBER_OF_PARAMETERS = 1;
     public static final int NUMBER_OF_COMMANDS = 1;
     public static final int POSITION_OF_TABLE_NAME = 1;

@@ -5,11 +5,14 @@ import com.epam.engx.cleancode.finaltask.task1.thirdpartyjar.DataSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.epam.engx.cleancode.finaltask.task1.TableBuilder.UpperSeparators.*;
+
+
 public class TableBuilder {
 
-    private static final String TOP_LEFT_CORNER = "╔";
-    private static final String TOP_MIDDLE_CORNER = "╦";
-    private static final String TOP_RIGHT_CORNER = "╗";
+//    private static final String TOP_LEFT_CORNER = "╔";
+//    private static final String TOP_MIDDLE_CORNER = "╦";
+//    private static final String TOP_RIGHT_CORNER = "╗";
 
     private static final String BOTTOM_LEFT_CORNER = "╚";
     private static final String BOTTOM_MIDDLE_CORNER = "╩";
@@ -23,6 +26,22 @@ public class TableBuilder {
     private static final String LINE = "═";
     private static final String INDENT = " ";
     private static final String NEW_LINE = "\n";
+
+    public enum UpperSeparators {
+        TOP_LEFT_CORNER("╔"),
+        TOP_MIDDLE_CORNER("╦"),
+        TOP_RIGHT_CORNER("╗");
+
+        private String value;
+
+        UpperSeparators(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
 
 
     public String getTableString(List<DataSet> data, String tableName) {
@@ -96,14 +115,14 @@ public class TableBuilder {
     }
 
     private String generateAllValuesLines(List<DataSet> dataSets, int columnCount) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int row = 0; row < dataSets.size(); row++) {
-            result += generateWholeLine(dataSets, row);
+            result.append(generateWholeLine(dataSets, row));
             if (isNotLastRow(dataSets, row)) {
-                result += generateMiddleLine(calculateMaxColumnSize(dataSets), columnCount);
+                result.append(generateMiddleLine(calculateMaxColumnSize(dataSets), columnCount));
             }
         }
-        return result;
+        return result.toString();
     }
 
     private boolean isNotLastRow(List<DataSet> dataSets, int row) {
@@ -123,15 +142,15 @@ public class TableBuilder {
     }
 
     private String generateWholeNamesLine(List<DataSet> dataSets) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         List<String> columnNames = dataSets.get(0).getColumnNames();
 
         for (int column = 0; column < countColumns(dataSets); column++) {
             String columnName = conversionToEvenLength(columnNames.get(column));
-            result += generateColumnValueLine(columnName, calculateMaxColumnSize(dataSets));
+            result.append(generateColumnValueLine(columnName, calculateMaxColumnSize(dataSets)));
         }
-        result += SIDE_BORDER + "\n";
-        return result;
+        result.append(SIDE_BORDER + "\n");
+        return result.toString();
     }
 
     private String generateWholeLine(List<DataSet> dataSets, int row) {
@@ -140,13 +159,13 @@ public class TableBuilder {
     }
 
     private String generateWholeValuesLine(List<Object> values , int columnCount, int maxColumnSize) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int column = 0; column < columnCount; column++) {
             String value = conversionToEvenLength(String.valueOf(values.get(column)));
-            result += generateColumnValueLine(value, maxColumnSize);
+            result.append(generateColumnValueLine(value, maxColumnSize));
         }
-        result += SIDE_BORDER + "\n";
-        return result;
+        result.append(SIDE_BORDER + NEW_LINE);
+        return result.toString();
     }
 
     private String conversionToEvenLength(String value) {
@@ -203,9 +222,9 @@ public class TableBuilder {
     }
 
     private String generateTopLine(int length, int columnCount) {
-        String result = TOP_LEFT_CORNER;
-        result += generateMiddleLine(length, columnCount, TOP_MIDDLE_CORNER);
-        result += TOP_RIGHT_CORNER + NEW_LINE;
+        String result = TOP_LEFT_CORNER.getValue();
+        result += generateMiddleLine(length, columnCount, TOP_MIDDLE_CORNER.getValue());
+        result += TOP_RIGHT_CORNER.getValue() + NEW_LINE;
         return result;
     }
 
