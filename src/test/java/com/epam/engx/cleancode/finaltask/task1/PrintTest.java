@@ -21,7 +21,6 @@ public class PrintTest {
     private View view;
     private DatabaseManager manager;
     private Command command;
-    private TableBuilder tableDAO;
     private final DataSet dataSet = new DataSetImpl();
 
     @Before

@@ -37,6 +37,18 @@ public class TableBuilder {
             return maxLength;
     }
 
+    private int getGeneralContentLength(int contentLength) {
+        int spaceReservedForEdges = countSpaceNeededForEdges(isColumnDividesToEqualParts(contentLength));
+        return contentLength + spaceReservedForEdges;
+    }
+
+    private int countSpaceNeededForEdges(boolean isEven) {
+        if (isEven) {
+            return 2;
+        }
+        return 3;
+    }
+
     private int findLongestElementLength(List<String> texts) {
         String longestText = "";
         for (String currentText : texts) {
@@ -73,14 +85,9 @@ public class TableBuilder {
     }
 
     private String getHeaderOfTheTable(List<DataSet> dataSets) {
-        int spaceForEdges = 2;
-        int columnLength = getColumnContentLength(dataSets);
+        int columnLength = getGeneralContentLength(getColumnContentLength(dataSets));
+
         int columnCount = getColumnCount(dataSets);
-        if (isColumnDividesToEqualParts(columnLength)) {
-            columnLength += spaceForEdges;
-        } else {
-            columnLength += spaceForEdges + 1;
-        }
 
         String result = buildUpperBorder(columnCount, columnLength);
 
@@ -192,38 +199,25 @@ public class TableBuilder {
     private String getStringTableData(List<DataSet> dataSets) {
         int rowsCount;
         rowsCount = dataSets.size();
-        int maxColumnSize = getColumnContentLength(dataSets);
+        int maxColumnSize = getGeneralContentLength(getColumnContentLength(dataSets));
+
         String result = "";
-        if (maxColumnSize % 2 == 0) {
-            maxColumnSize += 2;
-        } else {
-            maxColumnSize += 3;
-        }
         int columnCount = getColumnCount(dataSets);
         for (int row = 0; row < rowsCount; row++) {
             List<Object> values = dataSets.get(row).getValues();
             result = addBorder(result);
             for (int column = 0; column < columnCount; column++) {
                 int valuesLength = String.valueOf(values.get(column)).length();
+                int spaceReservedForIndents = (maxColumnSize - valuesLength) / 2;
+
+                result = appendSpaces(result, spaceReservedForIndents);
+                result = appendText(result, String.valueOf(values.get(column)));
                 if (valuesLength % 2 == 0) {
-                    for (int j = 0; j < (maxColumnSize - valuesLength) / 2; j++) {
-                        result += " ";
-                    }
-                    result += String.valueOf(values.get(column));
-                    for (int j = 0; j < (maxColumnSize - valuesLength) / 2; j++) {
-                        result += " ";
-                    }
-                    result = addBorder(result);
+                    result = appendSpaces(result, spaceReservedForIndents);
                 } else {
-                    for (int j = 0; j < (maxColumnSize - valuesLength) / 2; j++) {
-                        result += " ";
-                    }
-                    result += String.valueOf(values.get(column));
-                    for (int j = 0; j <= (maxColumnSize - valuesLength) / 2; j++) {
-                        result += " ";
-                    }
-                    result = addBorder(result);
+                    result = appendSpaces(result, spaceReservedForIndents + 1);
                 }
+                result = addBorder(result);
             }
             result += "\n";
             if (row < rowsCount - 1) {
