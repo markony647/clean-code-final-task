@@ -26,7 +26,7 @@ public class TableBuilderNewGen {
 
 
     public String getTableString(List<DataSet> data, String tableName) {
-        if (getColumnContentLength(data) == 0) {
+        if (data.isEmpty()) {
             return getEmptyTable(tableName);
         } else {
             return getHeaderAndStringOfTable(data);
@@ -57,9 +57,6 @@ public class TableBuilderNewGen {
 
     private int getColumnContentLength(List<DataSet> dataSets) {
         int maxLength;
-        if (dataSets.isEmpty()) {
-            return 0;
-        }
         List<String> columnNames = getColumnNames(dataSets);
         maxLength = findLongestElementLength(columnNames);
 
