@@ -195,6 +195,7 @@ public class TableBuilder {
         int maxColumnSize = getGeneralContentLength(getColumnContentLength(dataSets));
 
         String result = "";
+
         int columnCount = getColumnCount(dataSets);
         for (int row = 0; row < rowsCount; row++) {
             List<Object> values = dataSets.get(row).getValues();
