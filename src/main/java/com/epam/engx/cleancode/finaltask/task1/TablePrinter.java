@@ -11,9 +11,11 @@ import java.util.List;
 
 public class TablePrinter implements Command {
 
-    public static final int NUMBER_OF_PARAMETERS = 1;
-    public static final int NUMBER_OF_COMMANDS = 1;
-    public static final int POSITION_OF_TABLE_NAME = 1;
+    private static final int NUMBER_OF_PARAMETERS = 1;
+    private static final int NUMBER_OF_COMMANDS = 1;
+    private static final int POSITION_OF_TABLE_NAME = 1;
+    private static final String COMMAND_NAME = "print";
+
 
     private final View view;
     private final DatabaseManager manager;
@@ -27,7 +29,7 @@ public class TablePrinter implements Command {
     }
 
     public boolean canProcess(String command) {
-        return command.startsWith("print ");
+        return command.startsWith(COMMAND_NAME + COMMAND_SPLITTER);
     }
 
     public void process(String input) {
