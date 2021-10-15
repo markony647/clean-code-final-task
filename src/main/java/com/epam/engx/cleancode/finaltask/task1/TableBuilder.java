@@ -38,7 +38,7 @@ public class TableBuilder {
     }
 
     private int getGeneralContentLength(int contentLength) {
-        int spaceReservedForEdges = countSpaceNeededForEdges(isColumnDividesToEqualParts(contentLength));
+        int spaceReservedForEdges = countSpaceNeededForEdges(isEven(contentLength));
         return contentLength + spaceReservedForEdges;
     }
 
@@ -80,7 +80,7 @@ public class TableBuilder {
         return "║ Table '" + tableName + "' is empty or does not exist ║";
     }
 
-    private boolean isColumnDividesToEqualParts(int columnSize) {
+    private boolean isEven(int columnSize) {
         return columnSize % 2 == 0;
     }
 
@@ -101,7 +101,7 @@ public class TableBuilder {
 
             result = appendSpaces(result, spaceReservedForForOneSideIndents);
             result = appendText(result, columnNames.get(column));
-            if (spaceReservedForContent % 2 == 0) {
+            if (isEven(spaceReservedForContent)) {
                 result = appendSpaces(result, spaceReservedForForOneSideIndents);
             } else {
                 result = appendSpaces(result, spaceReservedForForOneSideIndents + 1);
@@ -112,14 +112,7 @@ public class TableBuilder {
 
         //last string of the header
         if (dataSets.size() > 0) {
-            result = addLeftEdge(result);
-            for (int j = 1; j < columnCount; j++) {
-                result = addHorizontalBorderSeparator(columnLength, result);
-                result = addMiddleColumnSeparator(result);
-            }
-            result = addHorizontalBorderSeparator(columnLength, result);
-            result = addRightEdge(result);
-            result += "\n";
+            result = addLineWithSeparators(columnLength, result, columnCount);
         } else {
             result += "╚";
             for (int j = 1; j < columnCount; j++) {
@@ -206,31 +199,50 @@ public class TableBuilder {
         for (int row = 0; row < rowsCount; row++) {
             List<Object> values = dataSets.get(row).getValues();
             result = addBorder(result);
-            for (int column = 0; column < columnCount; column++) {
-                int valuesLength = String.valueOf(values.get(column)).length();
-                int spaceReservedForIndents = (maxColumnSize - valuesLength) / 2;
-
-                result = appendSpaces(result, spaceReservedForIndents);
-                result = appendText(result, String.valueOf(values.get(column)));
-                if (valuesLength % 2 == 0) {
-                    result = appendSpaces(result, spaceReservedForIndents);
-                } else {
-                    result = appendSpaces(result, spaceReservedForIndents + 1);
-                }
-                result = addBorder(result);
-            }
+            result = drawRaw(maxColumnSize, result, columnCount, values);
             result += "\n";
-            if (row < rowsCount - 1) {
-                result = addLeftEdge(result);
-                for (int j = 1; j < columnCount; j++) {
-                    result = addHorizontalBorderSeparator(maxColumnSize, result);
-                    result += "╬";
-                }
-                result = addHorizontalBorderSeparator(maxColumnSize, result);
-                result = addRightEdge(result);
-                result += "\n";
+            if (isNotLastRaw(rowsCount, row)) {
+                result = addLineWithSeparators(maxColumnSize, result, columnCount);
             }
         }
+        result = addLastLineWithSeparators(maxColumnSize, result, columnCount);
+        return result;
+    }
+
+    private boolean isNotLastRaw(int rowsCount, int row) {
+        return row < rowsCount - 1;
+    }
+
+    private String drawRaw(int maxColumnSize, String result, int columnCount, List<Object> values) {
+        for (int column = 0; column < columnCount; column++) {
+            int valuesLength = String.valueOf(values.get(column)).length();
+            int spaceReservedForIndents = (maxColumnSize - valuesLength) / 2;
+
+            result = appendSpaces(result, spaceReservedForIndents);
+            result = appendText(result, String.valueOf(values.get(column)));
+            if (isEven(valuesLength)) {
+                result = appendSpaces(result, spaceReservedForIndents);
+            } else {
+                result = appendSpaces(result, spaceReservedForIndents + 1);
+            }
+            result = addBorder(result);
+        }
+        return result;
+    }
+
+    private String addLineWithSeparators(int maxColumnSize, String result, int columnCount) {
+        result = addLeftEdge(result);
+        for (int j = 1; j < columnCount; j++) {
+            result = addHorizontalBorderSeparator(maxColumnSize, result);
+            result = addMiddleColumnSeparator(result);
+        }
+        result = addHorizontalBorderSeparator(maxColumnSize, result);
+        result = addRightEdge(result);
+        result += "\n";
+        return result;
+    }
+
+    private String addLastLineWithSeparators(int maxColumnSize, String result, int columnCount) {
         result += "╚";
         for (int j = 1; j < columnCount; j++) {
             result = addHorizontalBorderSeparator(maxColumnSize, result);
