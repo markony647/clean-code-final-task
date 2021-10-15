@@ -14,11 +14,6 @@ import static com.epam.engx.cleancode.finaltask.task1.enums.UpperSeparators.*;
 
 public class TableBuilder {
 
-//    private static final String SIDE_BORDER = "║";
-//    private static final String LINE = "═";
-//    private static final String INDENT = " ";
-//    private static final String NEW_LINE = "\n";
-
     public String getTableString(List<DataSet> data, String tableName) {
         if (data.isEmpty()) {
             return getEmptyTable(tableName);
