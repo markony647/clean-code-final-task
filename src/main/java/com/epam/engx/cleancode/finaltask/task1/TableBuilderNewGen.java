@@ -152,19 +152,20 @@ public class TableBuilderNewGen {
         return value;
     }
 
-    private int getColumnSizeWithOutName(int maxColumnSize, String columnName) {
-        return  maxColumnSize - getColumnNameLength(columnName);
+    private int getSizeReservedForIndents(int maxColumnSize, String columnName) {
+        return maxColumnSize - getColumnNameLength(columnName);
     }
 
     private String generateColumnValueLine(String columnText, int maxColumnSize) {
         String result = SIDE_BORDER;
-        result += generateSplitterLine(getColumnSizeWithOutName(maxColumnSize, columnText) / 2);
+        int spaceReservedForIndents = getSizeReservedForIndents(maxColumnSize, columnText);
+        result += generateIndent(spaceReservedForIndents / 2);
         result += columnText;
-        result += generateSplitterLine(getColumnSizeWithOutName(maxColumnSize, columnText) / 2);
+        result += generateIndent(spaceReservedForIndents / 2);
         return result;
     }
 
-    private String generateSplitterLine( int halfColumnSizeWithOutName) {
+    private String generateIndent(int halfColumnSizeWithOutName) {
         return generateMiddleLinePart(halfColumnSizeWithOutName, INDENT);
     }
 
