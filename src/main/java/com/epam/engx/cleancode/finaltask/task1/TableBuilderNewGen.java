@@ -98,12 +98,16 @@ public class TableBuilderNewGen {
     private String generateAllValuesLines(List<DataSet> dataSets, int columnCount) {
         String result = "";
         for (int row = 0; row < dataSets.size(); row++) {
-            result += generateWholeValuesAllLines(dataSets, row);
-            if (row < dataSets.size() - 1) {
+            result += generateWholeLine(dataSets, row);
+            if (isNotLastRow(dataSets, row)) {
                 result += generateMiddleLine(calculateMaxColumnSize(dataSets), columnCount);
             }
         }
         return result;
+    }
+
+    private boolean isNotLastRow(List<DataSet> dataSets, int row) {
+        return row < dataSets.size() - 1;
     }
 
     private int countColumns(List<DataSet> dataSets) {
@@ -119,7 +123,7 @@ public class TableBuilderNewGen {
     }
 
     private String generateWholeNamesLine(List<DataSet> dataSets) {
-        String result= "";
+        String result = "";
         List<String> columnNames = dataSets.get(0).getColumnNames();
 
         for (int column = 0; column < countColumns(dataSets); column++) {
@@ -130,7 +134,7 @@ public class TableBuilderNewGen {
         return result;
     }
 
-    private String generateWholeValuesAllLines(List<DataSet> dataSets, int row) {
+    private String generateWholeLine(List<DataSet> dataSets, int row) {
         List<Object> values = dataSets.get(row).getValues();
         return generateWholeValuesLine(values, countColumns(dataSets), calculateMaxColumnSize(dataSets));
     }
@@ -159,9 +163,11 @@ public class TableBuilderNewGen {
     private String generateColumnValueLine(String columnText, int maxColumnSize) {
         String result = SIDE_BORDER;
         int spaceReservedForIndents = getSizeReservedForIndents(maxColumnSize, columnText);
-        result += generateIndent(spaceReservedForIndents / 2);
+        int spaceReservedForIndentsFormOneSide = spaceReservedForIndents / 2;
+
+        result += generateIndent(spaceReservedForIndentsFormOneSide);
         result += columnText;
-        result += generateIndent(spaceReservedForIndents / 2);
+        result += generateIndent(spaceReservedForIndentsFormOneSide);
         return result;
     }
 
@@ -174,13 +180,10 @@ public class TableBuilderNewGen {
     }
 
     private String generateLastStringOfHeader(int size, int maxColumnSize, int columnCount) {
-        String result = "";
         if (size > 0) {
-            result += generateMiddleLine(maxColumnSize, columnCount);
-        } else {
-            result += generateBottomLine(maxColumnSize, columnCount);
+            return generateMiddleLine(maxColumnSize, columnCount);
         }
-        return result;
+        return generateBottomLine(maxColumnSize, columnCount);
     }
 
     private int calculateMaxColumnSize(List<DataSet> dataSets) {
