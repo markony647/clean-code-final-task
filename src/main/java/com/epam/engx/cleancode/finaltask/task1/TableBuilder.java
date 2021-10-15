@@ -1,5 +1,6 @@
 package com.epam.engx.cleancode.finaltask.task1;
 
+import com.epam.engx.cleancode.finaltask.task1.enums.OtherSeparators;
 import com.epam.engx.cleancode.finaltask.task1.thirdpartyjar.DataSet;
 
 import java.util.List;
@@ -7,15 +8,16 @@ import java.util.stream.Collectors;
 
 import static com.epam.engx.cleancode.finaltask.task1.enums.LowerSeparators.*;
 import static com.epam.engx.cleancode.finaltask.task1.enums.MiddleSeparators.*;
+import static com.epam.engx.cleancode.finaltask.task1.enums.OtherSeparators.*;
 import static com.epam.engx.cleancode.finaltask.task1.enums.UpperSeparators.*;
 
 
 public class TableBuilder {
 
-    private static final String SIDE_BORDER = "║";
-    private static final String LINE = "═";
-    private static final String INDENT = " ";
-    private static final String NEW_LINE = "\n";
+//    private static final String SIDE_BORDER = "║";
+//    private static final String LINE = "═";
+//    private static final String INDENT = " ";
+//    private static final String NEW_LINE = "\n";
 
     public String getTableString(List<DataSet> data, String tableName) {
         if (data.isEmpty()) {
@@ -34,7 +36,7 @@ public class TableBuilder {
         String content = generateTextEmptyTable(tableName);
 
         String result = generateTopLine(getContentLength(content), oneColumn);
-        result += SIDE_BORDER + content + SIDE_BORDER  + NEW_LINE;
+        result += SIDE_BORDER.getValue() + content + SIDE_BORDER.getValue()  + NEW_LINE.getValue();
         result += generateBottomLine(getContentLength(content), oneColumn);
         return result;
     }
@@ -122,7 +124,7 @@ public class TableBuilder {
             String columnName = conversionToEvenLength(columnNames.get(column));
             result.append(generateColumnValueLine(columnName, calculateMaxColumnSize(dataSets)));
         }
-        result.append(SIDE_BORDER + "\n");
+        result.append(SIDE_BORDER.getValue()).append(NEW_LINE.getValue());
         return result.toString();
     }
 
@@ -137,13 +139,13 @@ public class TableBuilder {
             String value = conversionToEvenLength(String.valueOf(values.get(column)));
             result.append(generateColumnValueLine(value, maxColumnSize));
         }
-        result.append(SIDE_BORDER + NEW_LINE);
+        result.append(SIDE_BORDER.getValue() + NEW_LINE.getValue());
         return result.toString();
     }
 
     private String conversionToEvenLength(String value) {
         if (! isEven(value.length())) {
-            value += INDENT;
+            value += OtherSeparators.INDENT.getValue();
         }
         return value;
     }
@@ -153,7 +155,7 @@ public class TableBuilder {
     }
 
     private String generateColumnValueLine(String columnText, int maxColumnSize) {
-        String result = SIDE_BORDER;
+        String result = SIDE_BORDER.getValue();
         int spaceReservedForIndents = getSizeReservedForIndents(maxColumnSize, columnText);
         int spaceReservedForIndentsFormOneSide = spaceReservedForIndents / 2;
 
@@ -164,7 +166,7 @@ public class TableBuilder {
     }
 
     private String generateIndent(int halfColumnSizeWithOutName) {
-        return generateMiddleLinePart(halfColumnSizeWithOutName, INDENT);
+        return generateMiddleLinePart(halfColumnSizeWithOutName, OtherSeparators.INDENT.getValue());
     }
 
     private int getColumnNameLength(String columnName) {
@@ -197,21 +199,21 @@ public class TableBuilder {
     private String generateTopLine(int length, int columnCount) {
         String result = UPPER_LEFT_CORNER.getValue();
         result += generateMiddleLine(length, columnCount, UPPER_MIDDLE_CORNER.getValue());
-        result += UPPER_RIGHT_CORNER.getValue() + NEW_LINE;
+        result += UPPER_RIGHT_CORNER.getValue() + NEW_LINE.getValue();
         return result;
     }
 
     private String generateMiddleLine(int length, int columnCount) {
         String result = MIDDLE_LEFT_CORNER.getValue();
         result += generateMiddleLine(length, columnCount, MIDDLE_MIDDLE_CORNER.getValue());
-        result += MIDDLE_RIGHT_CORNER.getValue() + NEW_LINE;
+        result += MIDDLE_RIGHT_CORNER.getValue() + NEW_LINE.getValue();
         return result;
     }
 
     private String generateBottomLine(int length, int columnCount) {
-        String result = BOTTOM_LEFT_CORNER.getValue();
-        result += generateMiddleLine(length, columnCount, BOTTOM_MIDDLE_CORNER.getValue());
-        result += BOTTOM_RIGHT_CORNER.getValue() + NEW_LINE;
+        String result = LOWER_LEFT_CORNER.getValue();
+        result += generateMiddleLine(length, columnCount, LOWER_MIDDLE_CORNER.getValue());
+        result += LOWER_RIGHT_CORNER.getValue() + NEW_LINE.getValue();
         return result;
     }
 
@@ -226,10 +228,10 @@ public class TableBuilder {
     private String generateMiddleLine(int length, int columnCount, String element) {
         String result = "";
         for (int j = 1; j < columnCount; j++) {
-            result += generateMiddleLinePart(length, LINE);
+            result += generateMiddleLinePart(length, LINE.getValue());
             result += element;
         }
-        result += generateMiddleLinePart(length, LINE);
+        result += generateMiddleLinePart(length, LINE.getValue());
         return result;
     }
 }

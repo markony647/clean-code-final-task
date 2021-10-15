@@ -1,13 +1,15 @@
 package com.epam.engx.cleancode.finaltask.task1.enums;
 
-public enum LowerSeparators {
-    LOWER_LEFT_CORNER("╚"),
-    LOWER_MIDDLE_CORNER("╩"),
-    LOWER_RIGHT_CORNER("╝");
+public enum OtherSeparators {
+
+    SIDE_BORDER("║"),
+    LINE("═"),
+    INDENT(" "),
+    NEW_LINE("\n");
 
     private String value;
 
-    LowerSeparators(String value) {
+    OtherSeparators(String value) {
         this.value = value;
     }
 
