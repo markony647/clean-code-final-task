@@ -27,7 +27,7 @@ public class PrintTest {
     public void setup() {
         manager = Mockito.mock(DatabaseManager.class);
         view = Mockito.mock(View.class);
-        command = new Print(view, manager);
+        command = new TablePrinterCommand(view, manager);
     }
 
     @Test
